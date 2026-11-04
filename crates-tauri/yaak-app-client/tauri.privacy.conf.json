@@ -1,0 +1,16 @@
+{
+  "build": {
+    "features": ["wry"]
+  },
+  "bundle": {
+    "active": true,
+    "category": "DeveloperTool",
+    "createUpdaterArtifacts": false,
+    "targets": ["app"],
+    "macOS": {
+      "minimumSystemVersion": "13.0",
+      "entitlements": "macos/entitlements.plist",
+      "signingIdentity": "-"
+    }
+  }
+}

@@ -97,7 +97,13 @@ pub async fn maybe_check_for_updates() {
     }
 }
 
+// [privacy] scp-forks: CLI update checks are disabled.
+const PRIVACY_ALLOW_PHONE_HOME: bool = false;
+
 fn should_skip_check() -> bool {
+    if !PRIVACY_ALLOW_PHONE_HOME {
+        return true;
+    }
     if std::env::var("YAAK_CLI_NO_UPDATE_CHECK")
         .is_ok_and(|v| v == "1" || v.eq_ignore_ascii_case("true"))
     {

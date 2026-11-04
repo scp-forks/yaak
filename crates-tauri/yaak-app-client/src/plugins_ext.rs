@@ -73,6 +73,9 @@ pub async fn plugin_manager<R: Runtime>(
 
 const MAX_UPDATE_CHECK_HOURS: u64 = 12;
 
+// [privacy] scp-forks: background plugin update checks are disabled.
+const PRIVACY_ALLOW_PHONE_HOME: bool = false;
+
 pub struct PluginUpdater {
     last_check: Option<Instant>,
 }
@@ -148,6 +151,10 @@ impl PluginUpdater {
     }
 
     pub async fn maybe_check<R: Runtime>(&mut self, window: &WebviewWindow<R>) -> Result<bool> {
+        // [privacy] Never auto-contact api.yaak.app for plugin updates
+        if !PRIVACY_ALLOW_PHONE_HOME {
+            return Ok(false);
+        }
         let update_period_seconds = MAX_UPDATE_CHECK_HOURS * 60 * 60;
 
         if let Some(i) = self.last_check

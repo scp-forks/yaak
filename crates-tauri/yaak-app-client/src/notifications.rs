@@ -15,6 +15,9 @@ use yaak_models::util::UpdateSource;
 // Check for updates every hour
 const MAX_UPDATE_CHECK_SECONDS: u64 = 60 * 60;
 
+// [privacy] scp-forks: background notification checks are disabled.
+const PRIVACY_ALLOW_PHONE_HOME: bool = false;
+
 const KV_NAMESPACE: &str = "notifications";
 const KV_KEY: &str = "seen";
 
@@ -68,6 +71,10 @@ impl YaakNotifier {
     }
 
     pub async fn maybe_check<R: Runtime>(&mut self, window: &WebviewWindow<R>) -> Result<()> {
+        // [privacy] Never contact notify.yaak.app (sends launch count, install date, etc.)
+        if !PRIVACY_ALLOW_PHONE_HOME {
+            return Ok(());
+        }
         let app_handle = window.app_handle();
         if let Some(i) = self.last_check
             && i.elapsed().as_secs() < MAX_UPDATE_CHECK_SECONDS
